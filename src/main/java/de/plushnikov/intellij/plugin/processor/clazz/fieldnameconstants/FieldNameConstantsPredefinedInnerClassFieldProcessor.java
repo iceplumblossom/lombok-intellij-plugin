@@ -12,6 +12,7 @@ import de.plushnikov.intellij.plugin.util.PsiAnnotationUtil;
 import de.plushnikov.intellij.plugin.util.PsiClassUtil;
 import lombok.experimental.FieldNameConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class FieldNameConstantsPredefinedInnerClassFieldProcessor extends Abstra
 
   @NotNull
   @Override
-  public List<? super PsiElement> process(@NotNull PsiClass psiClass) {
+  public List<? super PsiElement> process(@NotNull PsiClass psiClass, @Nullable String nameHint) {
     if (psiClass.getParent() instanceof PsiClass) {
       PsiClass parentClass = (PsiClass) psiClass.getParent();
       PsiAnnotation psiAnnotation = PsiAnnotationSearchUtil.findAnnotation(parentClass, getSupportedAnnotationClasses());
@@ -36,12 +37,13 @@ public class FieldNameConstantsPredefinedInnerClassFieldProcessor extends Abstra
         ProblemEmptyBuilder problemBuilder = ProblemEmptyBuilder.getInstance();
         if (super.validate(psiAnnotation, parentClass, problemBuilder)) {
           final String typeName = FieldNameConstantsHandler.getTypeName(parentClass, psiAnnotation);
-          if (typeName.equals(psiClass.getName())) {
-            if (validate(psiAnnotation, parentClass, problemBuilder)) {
-              List<? super PsiElement> result = new ArrayList<>();
-              generatePsiElements(parentClass, psiClass, psiAnnotation, result);
-              return result;
-            }
+          if (typeName.equals(psiClass.getName())
+            && possibleToGenerateElementNamed(nameHint)
+            && validate(psiAnnotation, parentClass, problemBuilder)) {
+
+            List<? super PsiElement> result = new ArrayList<>();
+            generatePsiElements(parentClass, psiClass, psiAnnotation, result);
+            return result;
           }
         }
       }

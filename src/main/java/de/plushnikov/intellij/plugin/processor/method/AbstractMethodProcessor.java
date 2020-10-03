@@ -13,6 +13,7 @@ import de.plushnikov.intellij.plugin.processor.AbstractProcessor;
 import de.plushnikov.intellij.plugin.util.PsiAnnotationSearchUtil;
 import de.plushnikov.intellij.plugin.util.PsiClassUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -40,17 +41,28 @@ public abstract class AbstractMethodProcessor extends AbstractProcessor implemen
 
   @NotNull
   @Override
-  public List<? super PsiElement> process(@NotNull PsiClass psiClass) {
+  public List<? super PsiElement> process(@NotNull PsiClass psiClass, @Nullable String nameHint) {
     List<? super PsiElement> result = new ArrayList<>();
     for (PsiMethod psiMethod : PsiClassUtil.collectClassMethodsIntern(psiClass)) {
       PsiAnnotation psiAnnotation = PsiAnnotationSearchUtil.findAnnotation(psiMethod, getSupportedAnnotationClasses());
       if (null != psiAnnotation) {
-        if (validate(psiAnnotation, psiMethod, ProblemEmptyBuilder.getInstance())) {
+        if (possibleToGenerateElementNamed(nameHint) &&
+          validate(psiAnnotation, psiMethod, ProblemEmptyBuilder.getInstance())) {
           processIntern(psiMethod, psiAnnotation, result);
         }
       }
     }
     return result;
+  }
+
+  protected boolean possibleToGenerateElementNamed(@Nullable String nameHint) {
+    if (null == nameHint) {
+      return true;
+    }
+
+    //TODO: implement handling
+
+    return true;
   }
 
   @NotNull
