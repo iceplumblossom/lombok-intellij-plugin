@@ -63,7 +63,7 @@ public class LombokProcessorUtil {
   }
 
   public static Collection<String> getOnX(@NotNull PsiAnnotation psiAnnotation, @NotNull String parameterName) {
-    PsiAnnotationMemberValue onXValue = psiAnnotation.findAttributeValue(parameterName);
+    PsiAnnotationMemberValue onXValue = psiAnnotation.hasAttribute(parameterName) ? psiAnnotation.findAttributeValue(parameterName) : null;
     if (!(onXValue instanceof PsiAnnotation)) {
       return Collections.emptyList();
     }
