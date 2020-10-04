@@ -57,7 +57,7 @@ public class DataProcessor extends AbstractClassProcessor {
       getEqualsAndHashCodeProcessor().validateCallSuperParamExtern(psiAnnotation, psiClass, builder);
     }
 
-    final String staticName = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "staticConstructor");
+    final String staticName = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "staticConstructor", "");
     if (shouldGenerateRequiredArgsConstructor(psiClass, staticName)) {
       getRequiredArgsConstructorProcessor().validateBaseClassConstructor(psiClass, builder);
     }
@@ -89,7 +89,7 @@ public class DataProcessor extends AbstractClassProcessor {
     }
 
     final boolean hasConstructorWithoutParamaters;
-    final String staticName = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "staticConstructor");
+    final String staticName = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "staticConstructor", "");
     if (shouldGenerateRequiredArgsConstructor(psiClass, staticName)) {
       target.addAll(getRequiredArgsConstructorProcessor().createRequiredArgsConstructor(psiClass, PsiModifier.PUBLIC, psiAnnotation, staticName, true));
       // if there are no required field, it will already have a default constructor without parameters

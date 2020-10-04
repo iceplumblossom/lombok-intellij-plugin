@@ -71,7 +71,7 @@ public class CustomLogProcessor extends AbstractLogProcessor {
       builder.addError("The @CustomLog is not configured correctly; please set log.custom.declaration in lombok.config.");
       return false;
     }
-    final String topic = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "topic");
+    final String topic = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "topic", "");
     final boolean topicPresent = !StringUtil.isEmptyOrSpaces(topic);
     if (topicPresent) {
       if (!declaration.hasWithTopic()) {

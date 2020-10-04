@@ -82,7 +82,8 @@ public class EqualsAndHashCodeToStringHandler {
     }
   }
 
-  public Collection<MemberInfo> filterFields(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, boolean filterTransient, String includeAnnotationProperty) {
+  public Collection<MemberInfo> filterFields(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation,
+                                             boolean filterTransient, String includeAnnotationProperty) {
     final boolean explicitOf = PsiAnnotationUtil.hasDeclaredProperty(psiAnnotation, "of");
     final boolean onlyExplicitlyIncluded = PsiAnnotationUtil.getBooleanAnnotationValue(psiAnnotation, "onlyExplicitlyIncluded", false);
 
@@ -146,7 +147,7 @@ public class EqualsAndHashCodeToStringHandler {
         }
         result.add(new MemberInfo(psiField, fieldName, true));
       } else {
-        final String includeNameValue = PsiAnnotationUtil.getStringAnnotationValue(includeAnnotation, includeAnnotationProperty);
+        final String includeNameValue = PsiAnnotationUtil.getStringAnnotationValue(includeAnnotation, includeAnnotationProperty, "");
         final String newMemberName;
         if (StringUtil.isEmptyOrSpaces(includeNameValue)) {
           newMemberName = psiMember.getName();
@@ -178,14 +179,7 @@ public class EqualsAndHashCodeToStringHandler {
   }
 
   private int calcMemberRank(@NotNull PsiAnnotation includeAnnotation) {
-    final String includeRankValue = PsiAnnotationUtil.getStringAnnotationValue(includeAnnotation, TO_STRING_RANK_ANNOTATION_PARAMETER);
-    if (!StringUtil.isEmptyOrSpaces(includeRankValue)) {
-      try {
-        return Integer.parseInt(includeRankValue);
-      } catch (NumberFormatException ignore) {
-      }
-    }
-    return 0;
+    return PsiAnnotationUtil.getIntAnnotationValue(includeAnnotation, TO_STRING_RANK_ANNOTATION_PARAMETER, 0);
   }
 
   public String getMemberAccessorName(@NotNull MemberInfo memberInfo, boolean doNotUseGetters, @NotNull PsiClass psiClass) {

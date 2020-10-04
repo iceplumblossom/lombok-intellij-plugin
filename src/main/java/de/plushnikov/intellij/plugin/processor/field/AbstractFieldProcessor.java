@@ -45,8 +45,9 @@ public abstract class AbstractFieldProcessor extends AbstractProcessor implement
     for (PsiField psiField : PsiClassUtil.collectClassFieldsIntern(psiClass)) {
       PsiAnnotation psiAnnotation = PsiAnnotationSearchUtil.findAnnotation(psiField, getSupportedAnnotationClasses());
       if (null != psiAnnotation) {
-        if (possibleToGenerateElementNamed(nameHint) &&
-          validate(psiAnnotation, psiField, ProblemEmptyBuilder.getInstance())) {
+        if (possibleToGenerateElementNamed(nameHint, psiClass, psiAnnotation, psiField)
+          && validate(psiAnnotation, psiField, ProblemEmptyBuilder.getInstance())) {
+
           generatePsiElements(psiField, psiAnnotation, result);
         }
       }
@@ -54,7 +55,8 @@ public abstract class AbstractFieldProcessor extends AbstractProcessor implement
     return result;
   }
 
-  protected boolean possibleToGenerateElementNamed(@Nullable String nameHint) {
+  protected boolean possibleToGenerateElementNamed(@Nullable String nameHint, @NotNull PsiClass psiClass,
+                                                   @NotNull PsiAnnotation psiAnnotation, @NotNull PsiField psiField) {
     if (null == nameHint) {
       return true;
     }

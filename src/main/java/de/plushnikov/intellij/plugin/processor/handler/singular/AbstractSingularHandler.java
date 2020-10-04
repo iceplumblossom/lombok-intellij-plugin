@@ -122,7 +122,7 @@ public abstract class AbstractSingularHandler implements BuilderElementHandler {
   protected abstract String getAllMethodBody(@NotNull String singularName, @NotNull BuilderInfo info);
 
   public String createSingularName(@NotNull PsiAnnotation singularAnnotation, String psiFieldName) {
-    String singularName = PsiAnnotationUtil.getStringAnnotationValue(singularAnnotation, "value");
+    String singularName = PsiAnnotationUtil.getStringAnnotationValue(singularAnnotation, "value", "");
     if (StringUtil.isEmptyOrSpaces(singularName)) {
       singularName = Singulars.autoSingularize(psiFieldName);
       if (singularName == null) {
@@ -133,7 +133,7 @@ public abstract class AbstractSingularHandler implements BuilderElementHandler {
   }
 
   public static boolean validateSingularName(PsiAnnotation singularAnnotation, String psiFieldName) {
-    String singularName = PsiAnnotationUtil.getStringAnnotationValue(singularAnnotation, "value");
+    String singularName = PsiAnnotationUtil.getStringAnnotationValue(singularAnnotation, "value", "");
     if (StringUtil.isEmptyOrSpaces(singularName)) {
       singularName = Singulars.autoSingularize(psiFieldName);
       return singularName != null;

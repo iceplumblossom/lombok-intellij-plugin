@@ -1,6 +1,5 @@
 package de.plushnikov.intellij.plugin.util;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtil;
 import lombok.AccessLevel;
@@ -48,13 +47,12 @@ public class LombokProcessorUtil {
   @Nullable
   @PsiModifier.ModifierConstant
   private static String getLevelVisibility(@NotNull PsiAnnotation psiAnnotation, @NotNull String parameter) {
-    return convertAccessLevelToJavaModifier(PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, parameter));
+    return convertAccessLevelToJavaModifier(PsiAnnotationUtil.getEnumAnnotationValue(psiAnnotation, parameter, AccessLevel.PUBLIC));
   }
 
   @NotNull
   public static AccessLevel getAccessLevel(@NotNull PsiAnnotation psiAnnotation, @NotNull String parameter) {
-    final String annotationValue = StringUtil.notNullize(
-      PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, parameter), AccessLevel.NONE.name());
+    final String annotationValue = PsiAnnotationUtil.getEnumAnnotationValue(psiAnnotation, parameter, AccessLevel.NONE);
     return VALUE_ACCESS_LEVEL_MAP.computeIfAbsent(annotationValue, p -> AccessLevel.NONE);
   }
 

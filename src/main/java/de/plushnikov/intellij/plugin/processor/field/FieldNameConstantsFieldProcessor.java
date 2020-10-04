@@ -12,8 +12,10 @@ import de.plushnikov.intellij.plugin.util.LombokProcessorUtil;
 import de.plushnikov.intellij.plugin.util.PsiAnnotationUtil;
 import lombok.experimental.FieldNameConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Inspect and validate @FieldNameConstants lombok annotation on a field
@@ -34,6 +36,15 @@ public class FieldNameConstantsFieldProcessor extends AbstractFieldProcessor {
   protected boolean supportAnnotationVariant(@NotNull PsiAnnotation psiAnnotation) {
     // old version of @FieldNameConstants has a attributes "prefix" and "suffix", the new one not
     return null != psiAnnotation.findAttributeValue("prefix");
+  }
+
+  protected boolean possibleToGenerateElementNamed(@Nullable String nameHint, @NotNull PsiClass psiClass,
+                                                   @NotNull PsiAnnotation psiAnnotation, @NotNull PsiField psiField) {
+    if (null == nameHint) {
+      return true;
+    }
+    final String generatedElementName = calcFieldConstantName(psiField, psiAnnotation, psiClass);
+    return Objects.equals(nameHint, generatedElementName);
   }
 
   @Override
@@ -91,8 +102,8 @@ public class FieldNameConstantsFieldProcessor extends AbstractFieldProcessor {
 
   @NotNull
   private String calcFieldConstantName(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation, @NotNull PsiClass psiClass) {
-    String prefix = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "prefix");
-    String suffix = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "suffix");
+    String prefix = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "prefix", CONFIG_DEFAULT);
+    String suffix = PsiAnnotationUtil.getStringAnnotationValue(psiAnnotation, "suffix", CONFIG_DEFAULT);
 
     final ConfigDiscovery configDiscovery = ConfigDiscovery.getInstance();
     if (CONFIG_DEFAULT.equals(prefix)) {

@@ -11,8 +11,10 @@ import de.plushnikov.intellij.plugin.processor.handler.BuilderHandler;
 import de.plushnikov.intellij.plugin.settings.ProjectSettings;
 import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Inspect and validate @Builder lombok annotation on a class
@@ -34,6 +36,16 @@ public class BuilderClassProcessor extends AbstractClassProcessor {
   @Override
   public boolean isEnabled(@NotNull Project project) {
     return ProjectSettings.isEnabled(project, ProjectSettings.IS_BUILDER_ENABLED);
+  }
+
+  protected boolean possibleToGenerateElementNamed(@Nullable String nameHint, @NotNull PsiClass psiClass,
+                                                   @NotNull PsiAnnotation psiAnnotation) {
+    if (null == nameHint) {
+      return true;
+    }
+
+    final String innerBuilderClassName = getBuilderHandler().getBuilderClassName(psiClass, psiAnnotation, null);
+    return Objects.equals(nameHint, innerBuilderClassName);
   }
 
   @Override
