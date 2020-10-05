@@ -1,20 +1,17 @@
 package de.plushnikov.intellij.plugin.processor;
 
-import com.intellij.codeInsight.daemon.impl.analysis.JavaGenericsUtil;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.RecursionManager;
+import com.intellij.codeInsight.daemon.impl.analysis.*;
+import com.intellij.codeInspection.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.util.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.JavaVarTypeUtil;
-import de.plushnikov.intellij.plugin.problem.LombokProblem;
-import de.plushnikov.intellij.plugin.settings.ProjectSettings;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.impl.source.*;
+import de.plushnikov.intellij.plugin.problem.*;
+import de.plushnikov.intellij.plugin.settings.*;
+import lombok.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class ValProcessor extends AbstractProcessor {
 

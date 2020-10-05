@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,10 @@ public interface Processor {
     return true;
   }
 
+  default boolean notNameHintIsEqualToSupportedAnnotation(@Nullable String nameHint) {
+    return null == nameHint || Arrays.stream(getSupportedAnnotationClasses()).map(Class::getSimpleName).noneMatch(nameHint::equals);
+  }
+
   @NotNull
   default List<? super PsiElement> process(@NotNull PsiClass psiClass) {
     return process(psiClass, null);
@@ -42,5 +47,4 @@ public interface Processor {
   }
 
   LombokPsiElementUsage checkFieldUsage(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation);
-
 }
